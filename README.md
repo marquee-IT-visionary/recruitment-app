@@ -20,3 +20,9 @@ Open the URL printed by Vite. Run `npm test` for the challenge checks and `npm r
 - Candidate code executes in a short-lived sandboxed browser frame and worker with a timeout. This is a local prototype, not a secure environment for administering assessments to untrusted users. There is no authentication, server-side grading, persistence, or protection against tampering. Do not use real or sensitive data.
 - Editor changes are lost when the page is refreshed or closed.
 - The built files are static and can be hosted on a static web host, subject to that host's pricing and limits.
+
+## GitHub Pages
+
+The included workflow builds and deploys changes from `main`. Enable GitHub Pages in the repository settings and select **GitHub Actions** as the source. GitHub Pages availability for private repositories depends on the account's plan. The site itself is public: do not add confidential data or assessment answers to it.
+
+The production build uses the `/recruitment-app/` base path for this repository's Pages URL.
