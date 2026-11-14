@@ -1,0 +1,64 @@
+// Page routing and management
+export const PAGES = {
+  LOGIN: 'login',
+  SELECTION: 'selection',
+  DEVELOPER: 'developer',
+  TESTER: 'tester'
+};
+
+export const CREDENTIALS = {
+  username: 'rubaiyat.kibria',
+  password: '5%LemonJuice!'
+};
+
+export function showLoginPage(onLogin) {
+  return `
+    <div class="login-container">
+      <div class="login-box">
+        <h1 class="login-title">Rubaiyat's IT Candidate Selection App</h1>
+        <form id="login-form">
+          <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" placeholder="Enter your username" required />
+          </div>
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" placeholder="Enter your password" required />
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn-primary">Login</button>
+            <button type="button" class="btn-secondary" id="cancel-btn">Cancel</button>
+          </div>
+        </form>
+        <div id="login-error" class="error-message"></div>
+      </div>
+    </div>
+  `;
+}
+
+export function showSelectionPage(onSelectRole) {
+  return `
+    <div class="selection-container">
+      <header class="topbar"><div class="brand"><span class="brand-icon">R</span><span>RECRUITMENT <strong>LAB</strong></span></div></header>
+      <main class="selection-main">
+        <div class="selection-header">
+          <h1>Select Assessment Type</h1>
+          <p>Choose which assessment you would like to take</p>
+        </div>
+        <div class="tiles-container">
+          <div class="tile" id="developer-tile">
+            <div class="tile-icon">👨‍💻</div>
+            <h2>Developer Assessment</h2>
+            <p>SQL and JavaScript challenges</p>
+          </div>
+          <div class="tile" id="tester-tile">
+            <div class="tile-icon">🧪</div>
+            <h2>Tester Assessment</h2>
+            <p>Testing and QA challenges</p>
+          </div>
+        </div>
+        <button id="logout-btn" class="btn-logout">Logout</button>
+      </main>
+    </div>
+  `;
+}
