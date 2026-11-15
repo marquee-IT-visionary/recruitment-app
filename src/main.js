@@ -1,6 +1,17 @@
 import './style.css';
 import './login-styles.css';
-import { schema, starterApi, starterSql } from './challenges.js';
+import { 
+  schema, 
+  starterApi, 
+  starterSql,
+  performanceIssueCode,
+  performanceIssueHint,
+  runPerformanceTests,
+  sqlInjectionCode,
+  sqlInjectionHint,
+  runSecurityTests,
+  runApiTests
+} from './challenges.js';
 import { runApi } from './api-runner.js';
 import { PAGES, CREDENTIALS, showLoginPage, showSelectionPage } from './pages.js';
 
@@ -60,10 +71,10 @@ function renderSelectionPage() {
 
 function renderDeveloperAssessment() {
   app.innerHTML = `
-    <header class="topbar"><div class="brand"><span class="brand-icon">R</span><span>RECRUITMENT <strong>LAB</strong></span></div><span class="top-tag">DEVELOPER ASSESSMENT</span></header>
+    <header class="topbar"><div class="brand"><span class="brand-icon">R</span><span>RECRUITMENT <strong>LAB</strong></span></div><span class="top-tag">DEVELOPER ASSESSMENT</span><div class="timer-display" id="timer-display">10:00</div></header>
     <main>
       <div class="intro"><div><div class="eyebrow"><span class="dot"></span> PRACTICE ENVIRONMENT</div><h1>Developer assessment</h1><p>Two practical challenges. One workspace. Show us how you solve real-world problems.</p></div><div class="intro-badge"><span>✦</span><div><strong>Your workspace</strong><small>Work at your own pace</small></div></div></div>
-      <div class="overview"><span><strong>02</strong> challenges</span><span class="divider"></span><span>SQL + JavaScript</span><span class="divider"></span><span>No time limit</span></div>
+      <div class="overview"><span><strong>04</strong> challenges</span><span class="divider"></span><span>SQL · JavaScript · Java · C#</span><span class="divider"></span><span>Time limit: 10 minutes</span></div>
       <section class="challenge">
         <div class="section-heading"><span class="number">01</span><div><div class="section-kicker">DATABASE CHALLENGE</div><h2>Find the right licence</h2></div><span class="pill">SQL <span>·</span> PostgreSQL</span></div>
         <p class="brief">Find the licence for a customer whose last name is <strong>Johnson</strong> and who was born in <strong>January 1992</strong>. If there are multiple matching customers, find the record with an <strong>MPS</strong> licence.</p>
@@ -103,11 +114,44 @@ function renderDeveloperAssessment() {
         <div class="api-editor editor-block"><div class="block-heading"><span>CODE EDITOR</span><span>customer-api.js</span></div><label class="sr-only" for="api-editor">API handler code</label><textarea id="api-editor" spellcheck="false"></textarea><div class="editor-footer"><span>Simulated requests · no external API or Postman needed</span><button id="run-api">▶ &nbsp; Run API tests</button></div></div>
         <div class="results-block"><div class="results-heading"><div><span class="result-icon">✓</span><strong>Test results</strong></div><span id="api-status" class="muted">Ready to run</span></div><div id="api-results" class="empty">Run the API tests to check your solution.</div></div>
       </section>
-      <div style="text-align: center; margin-top: 30px;">
+      <section class="challenge">
+        <div class="section-heading"><span class="number orange">03</span><div><div class="section-kicker">PERFORMANCE CHALLENGE</div><h2>Optimize N+1 query problem</h2></div><span class="pill orange-pill">Java</span></div>
+        <p class="brief">The <code>/api/orders</code> endpoint is taking 15+ seconds to return 1,000 orders. Review the code and fix the performance issue.</p>
+        <div class="performance-spec">
+          <div><strong>Problem:</strong></div>
+          <p>The code fetches all orders, then queries the database again for each order to get customer details. This is an N+1 query problem.</p>
+          <div><strong>Requirement:</strong></div>
+          <p>Optimize the code to fetch all customer data in one or two database calls instead of 1,001 calls. Return the orders with customer names populated efficiently.</p>
+        </div>
+        <div class="code-editor editor-block"><div class="block-heading"><span>CODE EDITOR</span><span>orders-api.java</span></div><label class="sr-only" for="performance-editor">Performance issue code</label><textarea id="performance-editor" spellcheck="false" readonly></textarea><div class="editor-footer"><span>Identify and fix the N+1 query pattern</span><button id="run-performance">▶ &nbsp; Check solution</button></div></div>
+        <div class="results-block"><div class="results-heading"><div><span class="result-icon">⚡</span><strong>Analysis results</strong></div><span id="performance-status" class="muted">Ready to run</span></div><div id="performance-results" class="empty">Submit your fix to see the analysis.</div></div>
+      </section>
+      <section class="challenge">
+        <div class="section-heading"><span class="number red">04</span><div><div class="section-kicker">SECURITY CHALLENGE</div><h2>Fix SQL injection vulnerability</h2></div><span class="pill red-pill">C#</span></div>
+        <p class="brief">A developer has written vulnerable code that searches customers by last name. Identify the security flaw and fix it.</p>
+        <div class="security-spec">
+          <div><strong>Security Issue:</strong></div>
+          <p>User input is directly concatenated into SQL queries, making the code vulnerable to SQL injection attacks. Example: If lastName is <code>' OR '1'='1</code>, the entire database could be exposed.</p>
+          <div><strong>Requirement:</strong></div>
+          <p>Use parameterized queries to safely handle user input. Separate SQL logic from data.</p>
+        </div>
+        <div class="code-editor editor-block"><div class="block-heading"><span>CODE EDITOR</span><span>customer-search.cs</span></div><label class="sr-only" for="security-editor">SQL injection code</label><textarea id="security-editor" spellcheck="false" readonly></textarea><div class="editor-footer"><span>Fix the SQL injection vulnerability</span><button id="run-security">▶ &nbsp; Check solution</button></div></div>
+        <div class="results-block"><div class="results-heading"><div><span class="result-icon">🔒</span><strong>Security audit</strong></div><span id="security-status" class="muted">Ready to run</span></div><div id="security-results" class="empty">Submit your fix to see the security audit.</div></div>
+      </section>
+      <div style="text-align: center; margin-top: 30px; display: flex; gap: 10px; justify-content: center;">
+        <button id="home-btn" class="btn-home">🏠 Home</button>
         <button id="back-btn" class="btn-back">← Back to Selection</button>
       </div>
       <footer>RECRUITMENT LAB <span>·</span> Developer assessment prototype <span>·</span> Refreshing the page clears your work</footer>
     </main>
+    <div id="time-up-dialog" class="modal hidden">
+      <div class="modal-content">
+        <div class="modal-icon">⏰</div>
+        <h2>Assessment Time Over</h2>
+        <p>Your 10-minute assessment time has ended. Your responses have been saved.</p>
+        <button id="close-dialog-btn" class="btn-primary">OK</button>
+      </div>
+    </div>
   `;
 
   const $ = (selector) => document.querySelector(selector);
@@ -212,10 +256,126 @@ function renderDeveloperAssessment() {
     status.textContent = `${passed} / ${result.results.length} passed`;
   });
 
+  // Performance challenge
+  $('#performance-editor').value = performanceIssueCode;
+  
+  $('#run-performance').addEventListener('click', async () => {
+    const button = $('#run-performance');
+    const output = $('#performance-results');
+    const status = $('#performance-status');
+    button.disabled = true;
+    status.textContent = 'Analyzing…';
+    const result = await runPerformanceTests($('#performance-editor').value);
+    button.disabled = false;
+    output.className = 'test-list';
+    output.replaceChildren();
+    for (const test of result.results) {
+      const item = document.createElement('div');
+      item.className = 'test-item';
+      const icon = document.createElement('span');
+      icon.className = test.passed ? 'test-pass' : 'test-fail';
+      icon.textContent = test.passed ? '✓' : '×';
+      const content = document.createElement('div');
+      const name = document.createElement('strong');
+      name.textContent = test.name;
+      const detail = document.createElement('p');
+      detail.textContent = test.detail;
+      content.append(name, detail);
+      item.append(icon, content);
+      output.append(item);
+    }
+    const passed = result.results.filter((test) => test.passed).length;
+    status.textContent = `${passed} / ${result.results.length} checks passed`;
+  });
+
+  // Security challenge
+  $('#security-editor').value = sqlInjectionCode;
+  
+  $('#run-security').addEventListener('click', async () => {
+    const button = $('#run-security');
+    const output = $('#security-results');
+    const status = $('#security-status');
+    button.disabled = true;
+    status.textContent = 'Auditing…';
+    const result = await runSecurityTests($('#security-editor').value);
+    button.disabled = false;
+    output.className = 'test-list';
+    output.replaceChildren();
+    for (const test of result.results) {
+      const item = document.createElement('div');
+      item.className = 'test-item';
+      const icon = document.createElement('span');
+      icon.className = test.passed ? 'test-pass' : 'test-fail';
+      icon.textContent = test.passed ? '✓' : '×';
+      const content = document.createElement('div');
+      const name = document.createElement('strong');
+      name.textContent = test.name;
+      const detail = document.createElement('p');
+      detail.textContent = test.detail;
+      content.append(name, detail);
+      item.append(icon, content);
+      output.append(item);
+    }
+    const passed = result.results.filter((test) => test.passed).length;
+    status.textContent = `${passed} / ${result.results.length} checks passed`;
+  });
+
   document.querySelector('#back-btn').addEventListener('click', () => {
+    clearInterval(timerInterval);
     currentPage = PAGES.SELECTION;
     renderSelectionPage();
   });
+
+  document.querySelector('#home-btn').addEventListener('click', () => {
+    clearInterval(timerInterval);
+    currentPage = PAGES.SELECTION;
+    renderSelectionPage();
+  });
+
+  // Timer functionality
+  const ASSESSMENT_TIME = 10 * 60; // 10 minutes in seconds
+  let timeRemaining = ASSESSMENT_TIME;
+  let timerInterval = null;
+
+  function formatTime(seconds) {
+    const minutes = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${minutes}:${secs.toString().padStart(2, '0')}`;
+  }
+
+  function updateTimerDisplay() {
+    const timerDisplay = $('#timer-display');
+    timerDisplay.textContent = formatTime(timeRemaining);
+    
+    if (timeRemaining <= 60) {
+      timerDisplay.classList.add('timer-warning');
+    }
+    if (timeRemaining <= 0) {
+      timerDisplay.classList.add('timer-expired');
+    }
+  }
+
+  function showTimeUpDialog() {
+    clearInterval(timerInterval);
+    const dialog = $('#time-up-dialog');
+    dialog.classList.remove('hidden');
+    
+    document.querySelector('#close-dialog-btn').addEventListener('click', () => {
+      currentPage = PAGES.SELECTION;
+      renderSelectionPage();
+    });
+  }
+
+  timerInterval = setInterval(() => {
+    timeRemaining--;
+    updateTimerDisplay();
+    
+    if (timeRemaining <= 0) {
+      showTimeUpDialog();
+    }
+  }, 1000);
+
+  updateTimerDisplay();
 }
 
 function renderTesterAssessment() {

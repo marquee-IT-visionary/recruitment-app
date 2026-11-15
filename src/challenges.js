@@ -120,3 +120,79 @@ export async function runApiTests(source) {
   }
   return { results };
 }
+
+export const performanceIssueCode = `List<Order> orders = orderRepository.findAll();
+
+for (Order order : orders) {
+    Customer customer =
+        customerRepository.findById(order.getCustomerId());
+
+    order.setCustomerName(customer.getName());
+}
+
+return orders;`;
+
+export const performanceIssueHint = `The problem: This code performs an N+1 query - it fetches all orders, then for each order, queries the database again for the customer. With 1,000 orders, that's 1,001 database queries!
+
+The solution: Use a JOIN query to fetch orders with customer data in a single query, or fetch all customers at once then map them in memory.`;
+
+export async function runPerformanceTests(source) {
+  const performanceIssueDetected = source.includes('findById') && source.includes('for');
+  const nPlusOneFixed = !performanceIssueDetected || source.includes('JOIN') || source.includes('join');
+  
+  const results = [
+    {
+      name: 'Avoid N+1 query pattern',
+      passed: !performanceIssueDetected,
+      detail: performanceIssueDetected 
+        ? 'Your code still uses findById in a loop. Use a JOIN or batch load instead.'
+        : 'Good! You avoided the N+1 query pattern.'
+    },
+    {
+      name: 'Code contains JOIN or batch loading',
+      passed: nPlusOneFixed,
+      detail: nPlusOneFixed
+        ? 'Your solution loads customer data efficiently.'
+        : 'Use SQL JOIN or batch load customer data to fetch all records at once.'
+    }
+  ];
+  
+  return { results };
+}
+
+export const sqlInjectionCode = `string sql = 
+    "SELECT * FROM Customers WHERE LastName = '"
+    + lastName + "'";
+
+var result = db.Execute(sql);`;
+
+export const sqlInjectionHint = `Security Issue: This code is vulnerable to SQL injection! User input is directly concatenated into the SQL query.
+
+Example attack: lastName = "' OR '1'='1"
+Result: SELECT * FROM Customers WHERE LastName = '' OR '1'='1"
+
+Solution: Use parameterized queries to separate SQL logic from user input.`;
+
+export async function runSecurityTests(source) {
+  const hasParameterized = source.includes('@') || source.includes('?') || source.includes('$') || source.includes('parameterized') || source.includes('Parameters');
+  const hasNoStringConcatenation = !source.includes('+') || !source.includes('lastName');
+  
+  const results = [
+    {
+      name: 'Uses parameterized queries',
+      passed: hasParameterized,
+      detail: hasParameterized
+        ? 'Good! You\'re using parameterized queries with parameters (@, ?, or $).'
+        : 'Use parameterized queries instead of string concatenation.'
+    },
+    {
+      name: 'No direct string concatenation of user input',
+      passed: hasNoStringConcatenation,
+      detail: hasNoStringConcatenation
+        ? 'Your code separates user input from SQL logic.'
+        : 'Remove string concatenation. Use parameterized queries instead.'
+    }
+  ];
+  
+  return { results };
+}
