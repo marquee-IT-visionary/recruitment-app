@@ -181,6 +181,17 @@
   transform: translateY(-4px);
 }
 
+.login-tiles {
+  display: grid;
+  gap: 16px;
+}
+
+#admin-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
 .tile-icon {
   font-size: 48px;
   margin-bottom: 16px;

@@ -6,31 +6,67 @@ export const PAGES = {
   TESTER: 'tester'
 };
 
-export const CREDENTIALS = {
-  username: 'rubaiyat.kibria',
-  password: '5%LemonJuice!'
-};
-
-export function showLoginPage(onLogin) {
+export function showLoginPage() {
   return `
     <div class="login-container">
       <div class="login-box">
         <h1 class="login-title">Rubaiyat's IT Candidate Selection App</h1>
+        <div class="login-tiles">
+          <div class="tile" id="candidate-tile"><h2>Candidate login</h2><p>Take your assessment</p></div>
+          <div class="tile" id="admin-tile"><h2>Admin login</h2><p>Manage candidate access</p></div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+export function showCredentialsForm(role) {
+  const isAdmin = role === 'admin';
+  return `
+    <div class="login-container">
+      <div class="login-box">
+        <h1 class="login-title">${isAdmin ? 'Admin login' : 'Candidate login'}</h1>
         <form id="login-form">
-          <div class="form-group">
+          ${isAdmin ? '' : `<div class="form-group">
             <label for="username">Username</label>
             <input type="text" id="username" name="username" placeholder="Enter your username" required />
-          </div>
+          </div>`}
           <div class="form-group">
             <label for="password">Password</label>
             <input type="password" id="password" name="password" placeholder="Enter your password" required />
           </div>
           <div class="form-actions">
             <button type="submit" class="btn-primary">Login</button>
-            <button type="button" class="btn-secondary" id="cancel-btn">Cancel</button>
+            <button type="button" class="btn-secondary" id="cancel-btn">Back</button>
           </div>
         </form>
         <div id="login-error" class="error-message"></div>
+      </div>
+    </div>
+  `;
+}
+
+export function showAdminPage() {
+  return `
+    <div class="login-container">
+      <div class="login-box">
+        <h1 class="login-title">Candidate credentials</h1>
+        <form id="admin-form">
+          <div class="form-group">
+            <label for="cand-username">Candidate username</label>
+            <input type="text" id="cand-username" autocomplete="off" required />
+          </div>
+          <div class="form-group">
+            <label for="cand-password">Candidate password</label>
+            <input type="text" id="cand-password" autocomplete="off" minlength="8" required />
+          </div>
+          <div class="form-actions">
+            <button type="button" class="btn-secondary" id="generate-btn">Generate random</button>
+            <button type="submit" class="btn-primary">Save</button>
+          </div>
+          <button type="button" class="btn-secondary" id="admin-logout-btn">Logout</button>
+        </form>
+        <div id="admin-message" class="error-message"></div>
       </div>
     </div>
   `;

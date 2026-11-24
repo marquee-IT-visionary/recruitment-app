@@ -13,7 +13,8 @@ import {
   runApiTests
 } from './challenges.js';
 import { runApi } from './api-runner.js';
-import { PAGES, CREDENTIALS, showLoginPage, showSelectionPage } from './pages.js';
+import { PAGES, showLoginPage, showCredentialsForm, showAdminPage, showSelectionPage } from './pages.js';
+import { AUTH_URL } from './config.js';
 
 const app = document.querySelector('#app');
 let currentPage = PAGES.LOGIN;
@@ -21,29 +22,86 @@ let currentUser = null;
 
 function renderLoginPage() {
   app.innerHTML = showLoginPage();
+  document.querySelector('#candidate-tile').addEventListener('click', () => renderCredentialsForm('candidate'));
+  document.querySelector('#admin-tile').addEventListener('click', () => renderCredentialsForm('admin'));
+}
+
+function renderCredentialsForm(role) {
+  app.innerHTML = showCredentialsForm(role);
   const form = document.querySelector('#login-form');
-  const cancelBtn = document.querySelector('#cancel-btn');
   const errorDiv = document.querySelector('#login-error');
 
-  form.addEventListener('submit', (e) => {
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const username = document.querySelector('#username').value;
+    const usernameInput = document.querySelector('#username');
+    const username = usernameInput ? usernameInput.value : '';
     const password = document.querySelector('#password').value;
+    errorDiv.textContent = '';
 
-    if (username === CREDENTIALS.username && password === CREDENTIALS.password) {
-      currentUser = username;
-      currentPage = PAGES.SELECTION;
-      renderSelectionPage();
-    } else {
-      errorDiv.textContent = 'Invalid username or password';
+    try {
+      const response = await fetch(`${AUTH_URL}/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ role, username, password })
+      });
+      const result = await response.json();
+      if (!result.ok) {
+        errorDiv.textContent = role === 'admin' ? 'Invalid admin password' : 'Invalid username or password';
+      } else if (role === 'admin') {
+        renderAdminPage(result.token);
+      } else {
+        currentUser = username;
+        currentPage = PAGES.SELECTION;
+        renderSelectionPage();
+      }
+    } catch {
+      errorDiv.textContent = 'Unable to sign in. Please try again.';
     }
   });
 
-  cancelBtn.addEventListener('click', () => {
-    document.querySelector('#username').value = '';
-    document.querySelector('#password').value = '';
-    errorDiv.textContent = '';
+  document.querySelector('#cancel-btn').addEventListener('click', renderLoginPage);
+}
+
+async function renderAdminPage(token) {
+  app.innerHTML = showAdminPage();
+  const message = document.querySelector('#admin-message');
+  const userInput = document.querySelector('#cand-username');
+  const passInput = document.querySelector('#cand-password');
+  const headers = { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` };
+
+  try {
+    const response = await fetch(`${AUTH_URL}/admin/credentials`, { headers });
+    const result = await response.json();
+    if (!result.ok) throw new Error();
+    userInput.value = result.username;
+    passInput.value = result.password;
+  } catch {
+    message.textContent = 'Unable to load credentials. Please log in again.';
+  }
+
+  document.querySelector('#generate-btn').addEventListener('click', () => {
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789!@#$%';
+    const values = crypto.getRandomValues(new Uint32Array(14));
+    passInput.value = Array.from(values, (v) => chars[v % chars.length]).join('');
   });
+
+  document.querySelector('#admin-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    message.textContent = '';
+    try {
+      const response = await fetch(`${AUTH_URL}/admin/credentials`, {
+        method: 'PUT',
+        headers,
+        body: JSON.stringify({ username: userInput.value, password: passInput.value })
+      });
+      const result = await response.json();
+      message.textContent = result.ok ? 'Saved. The new credentials are active now.' : result.error || 'Unable to save.';
+    } catch {
+      message.textContent = 'Unable to save. Please try again.';
+    }
+  });
+
+  document.querySelector('#admin-logout-btn').addEventListener('click', renderLoginPage);
 }
 
 function renderSelectionPage() {
