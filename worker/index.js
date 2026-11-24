@@ -106,7 +106,12 @@ export default {
       }
 
       if (request.method === 'PUT') {
-        const body = await request.json();
+        let body;
+        try {
+          body = await request.json();
+        } catch {
+          return reply({ ok: false, error: 'Invalid request' }, 400);
+        }
         const username = String(body.username ?? '').trim();
         const password = String(body.password ?? '');
         if (!username || password.length < 8) return reply({ ok: false, error: 'Username required and password must be at least 8 characters' }, 400);
