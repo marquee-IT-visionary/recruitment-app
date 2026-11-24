@@ -71,7 +71,7 @@ function renderSelectionPage() {
 
 function renderDeveloperAssessment() {
   app.innerHTML = `
-    <header class="topbar"><div class="brand"><span class="brand-icon">R</span><span>RECRUITMENT <strong>LAB</strong></span></div><span class="top-tag">DEVELOPER ASSESSMENT</span><div class="timer-display" id="timer-display">10:00</div></header>
+    <header class="topbar"><div class="brand"><span class="brand-icon">R</span><span>RECRUITMENT <strong>LAB</strong></span></div><span class="top-tag">DEVELOPER ASSESSMENT</span><div class="timer-display" id="timer-display">30:00</div></header>
     <main>
       <div class="intro"><div><div class="eyebrow"><span class="dot"></span> PRACTICE ENVIRONMENT</div><h1>Developer assessment</h1><p>Two practical challenges. One workspace. Show us how you solve real-world problems.</p></div><div class="intro-badge"><span>✦</span><div><strong>Your workspace</strong><small>Work at your own pace</small></div></div></div>
       <div class="overview"><span><strong>04</strong> challenges</span><span class="divider"></span><span>SQL · JavaScript · Java · C#</span><span class="divider"></span><span>Time limit: 10 minutes</span></div>
@@ -148,7 +148,7 @@ function renderDeveloperAssessment() {
       <div class="modal-content">
         <div class="modal-icon">⏰</div>
         <h2>Assessment Time Over</h2>
-        <p>Your 10-minute assessment time has ended. Your responses have been saved.</p>
+        <p>Your 30-minute assessment time has ended. Your responses have been saved.</p>
         <button id="close-dialog-btn" class="btn-primary">OK</button>
       </div>
     </div>
@@ -333,7 +333,7 @@ function renderDeveloperAssessment() {
   });
 
   // Timer functionality
-  const ASSESSMENT_TIME = 10 * 60; // 10 minutes in seconds
+  const ASSESSMENT_TIME = 30 * 60; // 30 minutes in seconds
   let timeRemaining = ASSESSMENT_TIME;
   let timerInterval = null;
 
