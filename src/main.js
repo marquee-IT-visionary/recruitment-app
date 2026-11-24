@@ -74,7 +74,7 @@ function renderDeveloperAssessment() {
     <header class="topbar"><div class="brand"><span class="brand-icon">R</span><span>RECRUITMENT <strong>LAB</strong></span></div><span class="top-tag">DEVELOPER ASSESSMENT</span><div class="timer-display" id="timer-display">30:00</div></header>
     <main>
       <div class="intro"><div><div class="eyebrow"><span class="dot"></span> PRACTICE ENVIRONMENT</div><h1>Developer assessment</h1><p>Two practical challenges. One workspace. Show us how you solve real-world problems.</p></div><div class="intro-badge"><span>✦</span><div><strong>Your workspace</strong><small>Work at your own pace</small></div></div></div>
-      <div class="overview"><span><strong>04</strong> challenges</span><span class="divider"></span><span>SQL · JavaScript · Java · C#</span><span class="divider"></span><span>Time limit: 10 minutes</span></div>
+      <div class="overview"><span><strong>04</strong> challenges</span><span class="divider"></span><span>SQL · JavaScript · Java · C#</span><span class="divider"></span><span>Time limit: 30 minutes</span></div>
       <section class="challenge">
         <div class="section-heading"><span class="number">01</span><div><div class="section-kicker">DATABASE CHALLENGE</div><h2>Find the right licence</h2></div><span class="pill">SQL <span>·</span> PostgreSQL</span></div>
         <p class="brief">Find the licence for a customer whose last name is <strong>Johnson</strong> and who was born in <strong>January 1992</strong>. If there are multiple matching customers, find the record with an <strong>MPS</strong> licence.</p>
