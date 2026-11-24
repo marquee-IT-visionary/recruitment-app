@@ -101,6 +101,27 @@ async function renderAdminPage(token) {
     }
   });
 
+  document.querySelector('#admin-password-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const pwMessage = document.querySelector('#admin-password-message');
+    pwMessage.textContent = '';
+    try {
+      const response = await fetch(`${AUTH_URL}/admin/password`, {
+        method: 'PUT',
+        headers,
+        body: JSON.stringify({
+          current: document.querySelector('#admin-current').value,
+          password: document.querySelector('#admin-new').value
+        })
+      });
+      const result = await response.json();
+      pwMessage.textContent = result.ok ? 'Admin password changed. Use it next time you log in.' : result.error || 'Unable to change password.';
+      if (result.ok) e.target.reset();
+    } catch {
+      pwMessage.textContent = 'Unable to change password. Please try again.';
+    }
+  });
+
   document.querySelector('#admin-logout-btn').addEventListener('click', renderLoginPage);
 }
 
