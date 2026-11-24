@@ -67,6 +67,19 @@ export function showAdminPage() {
           <button type="button" class="btn-secondary" id="admin-logout-btn">Logout</button>
         </form>
         <div id="admin-message" class="error-message"></div>
+        <h2 class="login-title admin-subtitle">Change admin password</h2>
+        <form id="admin-password-form">
+          <div class="form-group">
+            <label for="admin-current">Current admin password</label>
+            <input type="password" id="admin-current" autocomplete="current-password" required />
+          </div>
+          <div class="form-group">
+            <label for="admin-new">New admin password (min 12 characters)</label>
+            <input type="password" id="admin-new" autocomplete="new-password" minlength="12" required />
+          </div>
+          <button type="submit" class="btn-primary">Change admin password</button>
+        </form>
+        <div id="admin-password-message" class="error-message"></div>
       </div>
     </div>
   `;

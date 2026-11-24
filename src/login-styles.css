@@ -186,10 +186,16 @@
   gap: 16px;
 }
 
-#admin-form {
+#admin-form,
+#admin-password-form {
   display: flex;
   flex-direction: column;
   gap: 20px;
+}
+
+.admin-subtitle {
+  font-size: 18px;
+  margin-top: 30px;
 }
 
 .tile-icon {

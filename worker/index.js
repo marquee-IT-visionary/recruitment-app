@@ -56,6 +56,11 @@ async function loadCredentials(env) {
   return stored ? JSON.parse(await decrypt(env, stored)) : null;
 }
 
+async function currentAdminPassword(env) {
+  const stored = await env.CONFIG.get('admin');
+  return stored ? decrypt(env, stored) : env.ADMIN_PASSWORD;
+}
+
 export default {
   async fetch(request, env) {
     const origin = request.headers.get('Origin');
@@ -88,7 +93,7 @@ export default {
       const password = String(body.password ?? '');
 
       if (body.role === 'admin') {
-        const ok = await safeEqual(password, env.ADMIN_PASSWORD);
+        const ok = await safeEqual(password, await currentAdminPassword(env));
         return ok ? reply({ ok: true, token: await makeToken(env) }) : reply({ ok: false }, 401);
       }
 
@@ -118,6 +123,22 @@ export default {
         await env.CONFIG.put('candidate', await encrypt(env, JSON.stringify({ username, password })));
         return reply({ ok: true });
       }
+    }
+
+    if (pathname === '/admin/password' && request.method === 'PUT') {
+      if (!(await checkToken(env, request))) return reply({ ok: false }, 401);
+      let body;
+      try {
+        body = await request.json();
+      } catch {
+        return reply({ ok: false, error: 'Invalid request' }, 400);
+      }
+      const current = String(body.current ?? '');
+      const next = String(body.password ?? '');
+      if (!(await safeEqual(current, await currentAdminPassword(env)))) return reply({ ok: false, error: 'Current password is incorrect' }, 401);
+      if (next.length < 12) return reply({ ok: false, error: 'New password must be at least 12 characters' }, 400);
+      await env.CONFIG.put('admin', await encrypt(env, next));
+      return reply({ ok: true });
     }
 
     return reply({ ok: false }, 404);
