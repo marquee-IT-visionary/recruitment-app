@@ -123,7 +123,7 @@ function renderDeveloperAssessment() {
           <div><strong>Requirement:</strong></div>
           <p>Optimize the code to fetch all customer data in one or two database calls instead of 1,001 calls. Return the orders with customer names populated efficiently.</p>
         </div>
-        <div class="code-editor editor-block"><div class="block-heading"><span>CODE EDITOR</span><span>orders-api.java</span></div><label class="sr-only" for="performance-editor">Performance issue code</label><textarea id="performance-editor" spellcheck="false" readonly></textarea><div class="editor-footer"><span>Identify and fix the N+1 query pattern</span><button id="run-performance">▶ &nbsp; Check solution</button></div></div>
+        <div class="code-editor editor-block"><div class="block-heading"><span>CODE EDITOR</span><span>orders-api.java</span></div><label class="sr-only" for="performance-editor">Performance issue code</label><textarea id="performance-editor" spellcheck="false"></textarea><div class="editor-footer"><span>Identify and fix the N+1 query pattern</span><button id="run-performance">▶ &nbsp; Check solution</button></div></div>
         <div class="results-block"><div class="results-heading"><div><span class="result-icon">⚡</span><strong>Analysis results</strong></div><span id="performance-status" class="muted">Ready to run</span></div><div id="performance-results" class="empty">Submit your fix to see the analysis.</div></div>
       </section>
       <section class="challenge">
@@ -135,7 +135,7 @@ function renderDeveloperAssessment() {
           <div><strong>Requirement:</strong></div>
           <p>Use parameterized queries to safely handle user input. Separate SQL logic from data.</p>
         </div>
-        <div class="code-editor editor-block"><div class="block-heading"><span>CODE EDITOR</span><span>customer-search.cs</span></div><label class="sr-only" for="security-editor">SQL injection code</label><textarea id="security-editor" spellcheck="false" readonly></textarea><div class="editor-footer"><span>Fix the SQL injection vulnerability</span><button id="run-security">▶ &nbsp; Check solution</button></div></div>
+        <div class="code-editor editor-block"><div class="block-heading"><span>CODE EDITOR</span><span>customer-search.cs</span></div><label class="sr-only" for="security-editor">SQL injection code</label><textarea id="security-editor" spellcheck="false"></textarea><div class="editor-footer"><span>Fix the SQL injection vulnerability</span><button id="run-security">▶ &nbsp; Check solution</button></div></div>
         <div class="results-block"><div class="results-heading"><div><span class="result-icon">🔒</span><strong>Security audit</strong></div><span id="security-status" class="muted">Ready to run</span></div><div id="security-results" class="empty">Submit your fix to see the security audit.</div></div>
       </section>
       <div style="text-align: center; margin-top: 30px; display: flex; gap: 10px; justify-content: center;">
